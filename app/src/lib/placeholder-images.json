@@ -1,0 +1,40 @@
+{
+  "placeholderImages": [
+    {
+      "id": "user-profile",
+      "description": "User profile picture",
+      "imageUrl": "https://images.unsplash.com/photo-1529995049601-ef63465a463f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwcm9maWxlJTIwcGVyc29ufGVufDB8fHx8MTc2ODE4NjA2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile person"
+    },
+    {
+      "id": "instant-exchange",
+      "description": "Abstract image representing speed and technology",
+      "imageUrl": "https://images.unsplash.com/photo-1518932692634-b258a3f89b9e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsaWdodCUyMHNwZWVkfGVufDB8fHx8MTcyMDYxOTk3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "light speed"
+    },
+    {
+      "id": "international-payments",
+      "description": "Image of a globe with connection lines",
+      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxnbG9iYWwlMjBuZXR3b3JrfGVufDB8fHx8MTcyMDYyMDAxMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "global network"
+    },
+    {
+      "id": "p2p-trading",
+      "description": "Image of two hands exchanging something",
+      "imageUrl": "https://images.unsplash.com/photo-1579621970795-87f91d736780?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYW5kc2hha2UlMjBtb25leXxlbnwwfHx8fDE3MjA2MjAwNDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "handshake money"
+    },
+    {
+      "id": "sbp-bg",
+      "description": "SBP Logo background",
+      "imageUrl": "/images/instant-change.jpg",
+      "imageHint": "sbp logo"
+    },
+    {
+      "id": "limitless-bg",
+      "description": "Limitless exchange background",
+      "imageUrl": "/images/classic-exchange.jpeg",
+      "imageHint": "crypto trading"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+export const WhiteWayFirstScreenBackground = () =>  <div className="center w-full h-full bg-[url(/images/first-screen/white-way.png)] bg-cover"></div>

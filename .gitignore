@@ -1,0 +1,8 @@
+.env
+.DS_Store
+.cursor/
+nginx/nginx.conf
+app/data/token.txt
+/new_design
+backend-requirements-3.txt
+prompts

@@ -1,0 +1,234 @@
+URL https://test-exchange-backend.partners-bot.ru/fast-exchange/order/rub_usdt/
+fetchOptions {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5ODcwMTU2LCJpYXQiOjE3Njk4NjI5NTYsImp0aSI6IjE3NTdkZmQ3Zjc0OTQ5YmZiYjQ1Y2UxZTQ1MzA5NTVhIiwidXNlcl9pZCI6Mn0.rk6y9h_zpIqExCo4I4SROO5lCeE1Ej0EonMcr97Hu_4',
+    'Content-Type': 'application/json'
+  },
+  body: '{"amount_give":1000,"amount_get":73180,"user_id":464552386,"payment_way_id":"bank100000000111","wallet":"adsf","rub_usdt_rate":73.18}'
+}
+{
+  error: 'Not Found',
+  message: 'Expected JSON, but received text/html; charset=utf-8',
+  details: '<!DOCTYPE html>\n' +
+    '<html lang="en">\n' +
+    '<head>\n' +
+    '  <meta http-equiv="content-type" content="text/html; charset=utf-8">\n' +
+    '  <title>Page not found at /fast-exchange/order/rub_usdt/</title>\n' +
+    '  <meta name="robots" content="NONE,NOARCHIVE">\n' +
+    '  <style type="text/css">\n' +
+    '    html * { padding:0; margin:0; }\n' +
+    '    body * { padding:10px 20px; }\n' +
+    '    body * * { padding:0; }\n' +
+    '    body { font:small sans-serif; background:#eee; color:#000; }\n' +
+    '    body>div { border-bottom:1px solid #ddd; }\n' +
+    '    h1 { font-weight:normal; margin-bottom:.4em; }\n' +
+    '    h1 span { font-size:60%; color:#666; font-weight:normal; }\n' +
+    '    table { border:none; border-collapse: collapse; width:100%; }\n' +
+    '    td, th { vertical-align:top; padding:2px 3px; }\n' +
+    '    th { width:12em; text-align:right; color:#666; padding-right:.5em; }\n' +
+    '    #info { background:#f6f6f6; }\n' +
+    '    #info ol { margin: 0.5em 4em; }\n' +
+    '    #info ol li { font-family: monospace; }\n' +
+    '    #summary { background: #ffc; }\n' +
+    '    #explanation { background:#eee; border-bottom: 0px none; }\n' +
+    '    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }\n' +
+    '  </style>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '  <div id="summary">\n' +
+    '    <h1>Page not found <span>(404)</span></h1>\n' +
+    '    \n' +
+    '    <table class="meta">\n' +
+    '      <tr>\n' +
+    '        <th>Request Method:</th>\n' +
+    '        <td>POST</td>\n' +
+    '      </tr>\n' +
+    '      <tr>\n' +
+    '        <th>Request URL:</th>\n' +
+    '        <td>http://test-exchange-backend.partners-bot.ru/fast-exchange/order/rub_usdt/</td>\n' +
+    '      </tr>\n' +
+    '      \n' +
+    '    </table>\n' +
+    '  </div>\n' +
+    '  <div id="info">\n' +
+    '    \n' +
+    '      <p>\n' +
+    '      Using the URLconf defined in <code>test_exchange_web_app.urls</code>,\n' +
+    '      Django tried these URL patterns, in this order:\n' +
+    '      </p>\n' +
+    '      <ol>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                swagger/\n' +
+    "                [name='schema-swagger-ui']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                redoc/\n' +
+    "                [name='schema-redoc']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                api/token/\n' +
+    "                [name='token_obtain_pair']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                api/token/refresh/\n' +
+    "                [name='token_refresh']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                admin/\n' +
+    '                \n' +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                cities/\n' +
+    "                [name='city_list']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                faqs/\n' +
+    "                [name='faqs']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                get-files/\n' +
+    "                [name='get-files']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                get-requisites/\n' +
+    "                [name='get-requisites']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                check-promo-code/\n' +
+    "                [name='check-promo-code']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                calling-operator/\n' +
+    "                [name='calling-operator']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                exchanges-other/\n' +
+    "                [name='exchanges-other-create']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                exchange/\n' +
+    "                [name='exchanges-create']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/update/\n' +
+    "                [name='update-user']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/\n' +
+    "                [name='user-info']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/check-mail/\n' +
+    "                [name='user-check-mail']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/check-consent/\n' +
+    "                [name='user-check-consent']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                direction-initial-data/&lt;str:direction_type&gt;/\n' +
+    "                [name='direction-initial-data']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                currencies-get/\n' +
+    "                [name='currency-buy-list']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                rate/\n' +
+    "                [name='rate']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/tracking/session/\n' +
+    "                [name='user-tracking-session']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                user/tracking/action/\n' +
+    "                [name='user-tracking-action']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                transfer-abroad/options/\n' +
+    "                [name='transfer-abroad-options']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '            \n' +
+    '                transfer-abroad/currencies/\n' +
+    "                [name='transfer-abroad-currencies']\n" +
+    '            \n' +
+    '          </li>\n' +
+    '        \n' +
+    '          <li>\n' +
+    '          ',
+  status: 404,
+  headers: { 'Content-Type': 'application/json' }
+}

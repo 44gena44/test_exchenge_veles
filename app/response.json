@@ -1,0 +1,372 @@
+{
+    "rate": {
+        "id": 3430,
+        "course": 79.34,
+        "course_view": 79.34,
+        "currency_give_min_value": 1004.9527,
+        "network": {
+            "name": "TRC20",
+            "id": 4,
+            "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ow8NSE5.svg"
+        },
+        "city": null,
+        "bank": {
+            "name": "Хоум Кредит",
+            "id": 17,
+            "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_pTXTX0A.svg"
+        },
+        "direction_type": "COIN - BANK",
+        "currency_give": {
+            "id": 4,
+            "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ow8NSE5.svg",
+            "name": "USDT",
+            "cities": [],
+            "banks": [],
+            "networks": [
+                {
+                    "name": "TRC20",
+                    "id": 4,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ow8NSE5.svg"
+                },
+                {
+                    "name": "ERC20",
+                    "id": 5,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_uYLj07S.svg"
+                },
+                {
+                    "name": "BEP20",
+                    "id": 6,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_s7lQL4I.svg"
+                },
+                {
+                    "name": "POLYGON",
+                    "id": 67,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_HuCckBu.svg"
+                },
+                {
+                    "name": "SOL",
+                    "id": 96,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_qK7Vslj.svg"
+                },
+                {
+                    "name": "TON",
+                    "id": 98,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ZLPv9VX.svg"
+                },
+                {
+                    "name": "ARBITRUM",
+                    "id": 99,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_rx4MyOA.svg"
+                }
+            ]
+        },
+        "currency_get": {
+            "id": 3,
+            "icon": null,
+            "name": "RUB",
+            "cities": [],
+            "banks": [
+                {
+                    "name": "Хоум Кредит",
+                    "id": 17,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_pTXTX0A.svg"
+                },
+                {
+                    "name": "Росбанк",
+                    "id": 20,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_7rD7o89.svg"
+                },
+                {
+                    "name": "Тинькофф",
+                    "id": 15,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_vOISzL8.svg"
+                },
+                {
+                    "name": "РНКБ",
+                    "id": 94,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_eS2TsCg.svg"
+                },
+                {
+                    "name": "Русский Стандарт",
+                    "id": 18,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_K2idMNQ.svg"
+                },
+                {
+                    "name": "Открытие",
+                    "id": 24,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_Bq40MTf.svg"
+                },
+                {
+                    "name": "СБП",
+                    "id": 60,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_rEWNrY3.svg"
+                },
+                {
+                    "name": "Карта Мир",
+                    "id": 25,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_S3Dqdae.svg"
+                },
+                {
+                    "name": "ВТБ",
+                    "id": 27,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_oQpTxA4.svg"
+                },
+                {
+                    "name": "Россельхозбанк",
+                    "id": 19,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_Van0Sna.svg"
+                },
+                {
+                    "name": "Райффайзен",
+                    "id": 21,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_rggSntw.svg"
+                },
+                {
+                    "name": "Почта Банк",
+                    "id": 23,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_zPN3k0d.svg"
+                },
+                {
+                    "name": "Газпромбанк",
+                    "id": 26,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_h3zl4z5.svg"
+                },
+                {
+                    "name": "Visa/MC",
+                    "id": 89,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_RfU6a4B.svg"
+                },
+                {
+                    "name": "Промсвязьбанк",
+                    "id": 22,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_igUoRF7.svg"
+                },
+                {
+                    "name": "Альфа-Банк",
+                    "id": 28,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_zC7BsNV.svg"
+                },
+                {
+                    "name": "Авангард",
+                    "id": 30,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_YRqFelq.svg"
+                },
+                {
+                    "name": "Сбербанк",
+                    "id": 3,
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_KQUqBm1.svg"
+                }
+            ],
+            "networks": []
+        }
+    },
+    "currencies_give": [
+        {
+            "id": 4,
+            "name": "USDT",
+            "cities": [],
+            "banks": [],
+            "networks": [
+                {
+                    "name": "TRC20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ow8NSE5.svg",
+                    "id": 4
+                },
+                {
+                    "name": "ERC20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_uYLj07S.svg",
+                    "id": 5
+                },
+                {
+                    "name": "BEP20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_s7lQL4I.svg",
+                    "id": 6
+                },
+                {
+                    "name": "POLYGON",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_HuCckBu.svg",
+                    "id": 67
+                },
+                {
+                    "name": "SOL",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_qK7Vslj.svg",
+                    "id": 96
+                },
+                {
+                    "name": "TON",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_ZLPv9VX.svg",
+                    "id": 98
+                },
+                {
+                    "name": "ARBITRUM",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdt_rx4MyOA.svg",
+                    "id": 99
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "ETH",
+            "cities": [],
+            "banks": [],
+            "networks": [
+                {
+                    "name": "ERC20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/eth_TK56sOK.svg",
+                    "id": 2
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "USDC",
+            "cities": [],
+            "banks": [],
+            "networks": [
+                {
+                    "name": "ERC20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdc_LMFHtue.svg",
+                    "id": 7
+                },
+                {
+                    "name": "BEP20",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdc_xVFVQUN.svg",
+                    "id": 9
+                },
+                {
+                    "name": "POLYGON",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/usdc_QAcsPSH.svg",
+                    "id": 68
+                }
+            ]
+        }
+    ],
+    "currencies_get": [
+        {
+            "id": 3,
+            "name": "RUB",
+            "cities": [],
+            "banks": [
+                {
+                    "name": "Хоум Кредит",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_pTXTX0A.svg",
+                    "id": 17
+                },
+                {
+                    "name": "Росбанк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_7rD7o89.svg",
+                    "id": 20
+                },
+                {
+                    "name": "Тинькофф",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_vOISzL8.svg",
+                    "id": 15
+                },
+                {
+                    "name": "РНКБ",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_eS2TsCg.svg",
+                    "id": 94
+                },
+                {
+                    "name": "Русский Стандарт",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_K2idMNQ.svg",
+                    "id": 18
+                },
+                {
+                    "name": "Открытие",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_Bq40MTf.svg",
+                    "id": 24
+                },
+                {
+                    "name": "СБП",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_rEWNrY3.svg",
+                    "id": 60
+                },
+                {
+                    "name": "Карта Мир",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_S3Dqdae.svg",
+                    "id": 25
+                },
+                {
+                    "name": "ВТБ",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_oQpTxA4.svg",
+                    "id": 27
+                },
+                {
+                    "name": "Россельхозбанк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_Van0Sna.svg",
+                    "id": 19
+                },
+                {
+                    "name": "Райффайзен",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_rggSntw.svg",
+                    "id": 21
+                },
+                {
+                    "name": "Почта Банк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_zPN3k0d.svg",
+                    "id": 23
+                },
+                {
+                    "name": "Газпромбанк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_h3zl4z5.svg",
+                    "id": 26
+                },
+                {
+                    "name": "Visa/MC",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_RfU6a4B.svg",
+                    "id": 89
+                },
+                {
+                    "name": "Промсвязьбанк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_igUoRF7.svg",
+                    "id": 22
+                },
+                {
+                    "name": "Альфа-Банк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_zC7BsNV.svg",
+                    "id": 28
+                },
+                {
+                    "name": "Авангард",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_YRqFelq.svg",
+                    "id": 30
+                },
+                {
+                    "name": "Сбербанк",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/rub_KQUqBm1.svg",
+                    "id": 3
+                }
+            ],
+            "networks": []
+        },
+        {
+            "id": 40,
+            "name": "CNY",
+            "cities": [],
+            "banks": [
+                {
+                    "name": "Банковская карта",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/card_0pGiaiX.svg",
+                    "id": 40
+                },
+                {
+                    "name": "WeChat",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/card_ZmGe6FK.svg",
+                    "id": 104
+                },
+                {
+                    "name": "Alipay",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/card_mijEuf8.svg",
+                    "id": 105
+                },
+                {
+                    "name": "Карта UnionPay",
+                    "icon": "https://cryptus-2.0.1362967-ci52663.tw1.ru/media/currencies_icon/card_VzXyrfF.svg",
+                    "id": 106
+                }
+            ],
+            "networks": []
+        }
+    ]
+}

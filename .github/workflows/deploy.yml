@@ -1,0 +1,48 @@
+name: Sync Directory Excluding Specific Files and Run Docker Compose
+
+on:
+  push:
+    branches:
+      - main # Меняйте на вашу рабочую ветку
+  workflow_dispatch: # Возможность ручного запуска
+
+jobs:
+  sync_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Extract and show repository name
+        id: extract_repo_name
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo "::set-output name=repo_name::$REPO_NAME"
+
+      # Копируем директорию на сервер через rsync, исключая .env и app/data/token.txt
+      - name: Rsync directory excluding specific files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}  # root или другой пользователь
+          key: ${{ secrets.SERVER_SSH_KEY }}    # ← ключ вместо password
+          port: 22
+          source: "."
+          target: "/home/apps/${{ steps.extract_repo_name.outputs.repo_name }}"
+          switches_extra: --exclude=.env --exclude=app/data/token.txt --exclude=.git/
+
+      # Выполняем Docker Compose на сервере
+      - name: Start Docker Compose on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/apps/${{ steps.extract_repo_name.outputs.repo_name }} && \
+            docker compose up -d --build && \
+            chown -R 1000:1000 /home/apps/${{ steps.extract_repo_name.outputs.repo_name }}/app/data && \
+            chmod -R 755 /home/apps/${{ steps.extract_repo_name.outputs.repo_name }}/app/data
+          
