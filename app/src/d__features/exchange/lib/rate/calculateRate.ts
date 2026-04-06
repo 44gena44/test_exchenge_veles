@@ -10,9 +10,12 @@ export const calculateRate = ({
   course,
   currencyGive,
   currencyGet,
-}: CalculateRateProps): HeadingRate => {
+}: CalculateRateProps): HeadingRate | null => {
 
   const baseRate = course;
+  if (!Number.isFinite(baseRate) || baseRate <= 0) {
+    return null;
+  }
 
   if (baseRate < 1) {
     return {

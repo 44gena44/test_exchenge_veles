@@ -1,34 +1,37 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, ShieldX, ChevronRight, ShieldQuestion } from "lucide-react";
+import { ArrowUpDown, ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { BaseSelect, InputWrapper, Input } from "@/shared/ui";
 import { LimitsModal } from "@/components/limits-modal";
 import { ExchangeStatusModal } from "@/components/exchange-status-modal";
-import { useServerAction, validateExchangeInput } from "@/shared/lib";
 import { valueMask, formatWithSpaces, normalizeInput } from "@/shared/lib/string/valueMask";
-import {
-  createFastExchangeOrderAction,
-  getFastExchangeRateAction,
-  getLimitsInfoAction,
-} from "@/d__features/mockApi/api/actions";
 import { FastExchangeWay } from "@/shared/model/api/mock/types";
-import { setCreateFastExchangeOrderLoading, setGetFastExchangeRateLoading } from "@/d__features/mockApi/model";
-import { useAppSelector } from "@/shared/model/store";
 import clsx from "clsx";
 
 const MIN_AMOUNT = 1000
+const DEMO_RATE_MIN = 76;
+const DEMO_RATE_MAX = 84;
+const DEMO_NETWORK_FEE_MIN = 0.8;
+const DEMO_NETWORK_FEE_MAX = 1.8;
+const FALLBACK_PAYMENT_OPTIONS: FastExchangeWay[] = [
+  { id: 1, name: "СБП" },
+  { id: 2, name: "Сбербанк" },
+  { id: 3, name: "Т-Банк" },
+  { id: 4, name: "ВТБ" },
+];
 
 export default function InstantExchangePage() {
   const [fromAmount, setFromAmount] = React.useState("");
   const [toAmount, setToAmount] = React.useState("");
+  const [isRubToUsdt, setIsRubToUsdt] = React.useState(true);
   const [paymentMethod, setPaymentMethod] = React.useState<FastExchangeWay | null>(null);
   const [usdtAddress, setUsdtAddress] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [isLimitsModalOpen, setIsLimitsModalOpen] = React.useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = React.useState(false);
   const [isPaymentMethodOpen, setIsPaymentMethodOpen] = React.useState(false);
@@ -37,101 +40,47 @@ export default function InstantExchangePage() {
   const [lastChangedField, setLastChangedField] = React.useState<"from" | "to">("from");
   const [areErrorsVisible, setAreErrorsVisible] = React.useState(false);
   const [fromAmountError, setFromAmountError] = React.useState<string | null>(null);
-  const [usdtAddressError, setUsdtAddressError] = React.useState<string | null>(null);
   const [fromAmountFormatted, setFromAmountFormatted] = React.useState("");
   const [toAmountFormatted, setToAmountFormatted] = React.useState("");
-  const fromCurrency = "RUB";
-  const toCurrency = "USDT";
+  const [demoUsdtRubRate, setDemoUsdtRubRate] = React.useState(() =>
+    Number((DEMO_RATE_MIN + Math.random() * (DEMO_RATE_MAX - DEMO_RATE_MIN)).toFixed(2))
+  );
+  const [demoNetworkFee, setDemoNetworkFee] = React.useState(() =>
+    Number((DEMO_NETWORK_FEE_MIN + Math.random() * (DEMO_NETWORK_FEE_MAX - DEMO_NETWORK_FEE_MIN)).toFixed(2))
+  );
 
-  const userId = useAppSelector(state => state.user.id)
-  const kycStatus = useAppSelector(state => state.user.data?.user_data?.kyc_verified)
+  const fromCurrency = isRubToUsdt ? "RUB" : "USDT";
+  const toCurrency = isRubToUsdt ? "USDT" : "RUB";
+  const fromCurrencyIcon = isRubToUsdt ? "/images/icons/rub.svg" : "/images/icons/usdt.svg";
+  const toCurrencyIcon = isRubToUsdt ? "/images/icons/usdt.svg" : "/images/icons/rub.svg";
 
+  const limitsData = null;
 
-  const [getRate, rateData] = useServerAction({
-    action: getFastExchangeRateAction,
-    loadingAction: setGetFastExchangeRateLoading,
-  });
-  const [getLimits, limitsData] = useServerAction({
-    action: getLimitsInfoAction,
-  });
+  const paymentOptions = FALLBACK_PAYMENT_OPTIONS;
 
-  const [createOrder, orderResponse] = useServerAction({
-    action: createFastExchangeOrderAction,
-    loadingAction: setCreateFastExchangeOrderLoading
-  });
-
-  // Extract limits from limitsData
-  const extractedLimits = React.useMemo<{
-    amountLimit: number | null;
-    exchangeCountLeft: number | null;
-  } | null>(() => {
-    if (!limitsData?.info_list) return null;
-
-    let minAmountLimit: number | null = null;
-    let exchangeCountLeft: number | null = null;
-
-    limitsData.info_list.forEach(category => {
-      category.info_list.forEach(limit => {
-        if (limit.limit_left !== undefined && typeof limit.description === 'string' && typeof limit.title === 'string') {
-          // Check if this is amount limit (contains currency symbols or large numbers)
-          if (limit.description.includes('₽') || limit.description.includes('р') ||
-            limit.title.toLowerCase().includes('сумм') || limit.title.toLowerCase().includes('объем')) {
-            const match = limit.description.match(/[\d\s]+/);
-            if (match) {
-              const totalAmount = parseFloat(match[0].replace(/\s/g, ''));
-              if (!isNaN(totalAmount)) {
-                const currentLimit = limit.limit_left as number;
-                // Find minimum limit among all amount limits
-                if (minAmountLimit === null || currentLimit < minAmountLimit) {
-                  minAmountLimit = currentLimit;
-                }
-              }
-            }
-          }
-          // Check if this is exchange count limit
-          else if (limit.title.toLowerCase().includes('обмен') ||
-            limit.title.toLowerCase().includes('запрос') ||
-            limit.title.toLowerCase().includes('транзакц')) {
-            exchangeCountLeft = limit.limit_left as number;
-          }
-        }
-      });
-    });
-
-    return { amountLimit: minAmountLimit, exchangeCountLeft };
-  }, [limitsData]);
-
-  // Fetch rate and limits on mount and refresh every 30 seconds
+  // Refresh demo rates periodically.
   React.useEffect(() => {
-    getRate(undefined);
-    if (userId) {
-      getLimits({ user_id: userId });
-    }
-
     const intervalId = setInterval(() => {
-      getRate(undefined);
-    }, 30000); // 30 seconds
+      setDemoUsdtRubRate(
+        Number((DEMO_RATE_MIN + Math.random() * (DEMO_RATE_MAX - DEMO_RATE_MIN)).toFixed(2))
+      );
+      setDemoNetworkFee(
+        Number((DEMO_NETWORK_FEE_MIN + Math.random() * (DEMO_NETWORK_FEE_MAX - DEMO_NETWORK_FEE_MIN)).toFixed(2))
+      );
+    }, 12000);
 
     return () => clearInterval(intervalId);
-  }, [userId]);
+  }, []);
 
   React.useEffect(() => {
-    if (rateData?.payment_ways?.length && !paymentMethod) {
-      setPaymentMethod(rateData.payment_ways[0]);
+    if (!paymentMethod && paymentOptions.length > 0) {
+      setPaymentMethod(paymentOptions[0]);
     }
-  }, [rateData, paymentMethod]);
+  }, [paymentOptions, paymentMethod]);
 
   React.useEffect(() => {
-    const rate = rateData?.rub_usdt_rate;
-    const fee = rateData?.network_fee_usdt ?? 0;
-    if (!rate) {
-      if (lastChangedField === "from") {
-        setToAmount("");
-      } else {
-        setFromAmount("");
-      }
-      return;
-    }
+    const rate = demoUsdtRubRate;
+    const fee = demoNetworkFee;
 
     if (lastChangedField === "from") {
       if (!fromAmount) {
@@ -143,28 +92,29 @@ export default function InstantExchangePage() {
         setToAmount("");
         return;
       }
-      const converted = parsed / rate - fee;
-      setToAmount(converted > 0 ? converted.toFixed(2) : "0");
-    } else {
-      if (!toAmount) {
-        setFromAmount("");
-        return;
-      }
-      const parsed = Number(toAmount);
-      if (Number.isNaN(parsed)) {
-        setFromAmount("");
-        return;
-      }
-      setFromAmount(((parsed + fee) * rate).toFixed(2));
-    }
-  }, [fromAmount, toAmount, rateData, lastChangedField]);
 
-  React.useEffect(() => {
-    if (orderResponse) {
-      console.log(orderResponse)
-      setIsStatusModalOpen(true);
+      const converted = isRubToUsdt
+        ? parsed / rate - fee
+        : (parsed - fee) * rate;
+      setToAmount(converted > 0 ? converted.toFixed(2) : "0");
+      return;
     }
-  }, [orderResponse]);
+
+    if (!toAmount) {
+      setFromAmount("");
+      return;
+    }
+    const parsed = Number(toAmount);
+    if (Number.isNaN(parsed)) {
+      setFromAmount("");
+      return;
+    }
+
+    const converted = isRubToUsdt
+      ? (parsed + fee) * rate
+      : parsed / rate + fee;
+    setFromAmount(converted > 0 ? converted.toFixed(2) : "0");
+  }, [fromAmount, toAmount, demoUsdtRubRate, demoNetworkFee, lastChangedField, isRubToUsdt]);
 
   // Payment method search logic
   React.useEffect(() => {
@@ -204,7 +154,7 @@ export default function InstantExchangePage() {
     setPaymentMethodSearch(val);
     setIsPaymentMethodOpen(true);
 
-    const exactMatch = (rateData?.payment_ways || []).find(
+    const exactMatch = paymentOptions.find(
       (option) => option.name.toLowerCase() === val.toLowerCase()
     );
     if (exactMatch) {
@@ -212,45 +162,17 @@ export default function InstantExchangePage() {
     }
   };
 
-  const networkFee = rateData?.network_fee_usdt ?? null;
+  const networkFee = demoNetworkFee;
 
   const validateFields = () => {
     let hasErrors = false;
-
-    // Validate from amount
-    const amountError = validateExchangeInput({
-      value: fromAmount,
-      inputType: "amount",
-      position: "given",
-      minValue: 0,
-    });
-    setFromAmountError(amountError);
-    if (amountError) hasErrors = true;
-
-    // Validate amount against limit
-    if (!amountError && extractedLimits?.amountLimit !== null && extractedLimits?.amountLimit !== undefined) {
-      const parsedAmount = Number(fromAmount);
-      const limitAmount = extractedLimits.amountLimit;
-      const minAmount = MIN_AMOUNT
-      if (!isNaN(parsedAmount) && parsedAmount > limitAmount) {
-        setFromAmountError(`Превышен лимит. Доступно: ${limitAmount.toLocaleString('ru-RU')} ₽`);
-        hasErrors = true;
-      }
-      if (!isNaN(parsedAmount) && parsedAmount < minAmount) {
-        setFromAmountError(`Сумма ниже лимита. Минимально: ${minAmount.toLocaleString('ru-RU')} ₽`);
-        hasErrors = true;
-      }
+    const parsedAmount = Number(fromAmount);
+    if (!fromAmount || Number.isNaN(parsedAmount) || parsedAmount <= 0) {
+      setFromAmountError("Введите сумму обмена");
+      hasErrors = true;
+    } else {
+      setFromAmountError(null);
     }
-
-    // Validate wallet address
-    const walletError = validateExchangeInput({
-      value: usdtAddress,
-      inputType: "walletAddress",
-      position: "received",
-      minValue: 0,
-    });
-    setUsdtAddressError(walletError);
-    if (walletError) hasErrors = true;
 
     return hasErrors;
   };
@@ -262,43 +184,48 @@ export default function InstantExchangePage() {
       return;
     }
 
-    const rate = rateData?.rub_usdt_rate;
-    const parsed = Number(fromAmount);
-    console.log(1)
-
-    if (!rate || Number.isNaN(parsed) || parsed <= 0 || !usdtAddress) {
-      return;
+    if (!paymentMethod) {
+      setPaymentMethod(paymentOptions[0]);
     }
-    console.log(2)
-
-    const payment_way_id = paymentMethod?.id
-
-    if (!payment_way_id || !userId) {
-      throw "payment_way_id or userId undefined"
+    if (isRubToUsdt && !usdtAddress) {
+      setUsdtAddress("TDEMOu7N8gQw3TRC20walletX12");
     }
-    if (networkFee === null) {
-      throw "networkFee undefined"
+    if (!isRubToUsdt && !phoneNumber) {
+      setPhoneNumber("+7 900 123-45-67");
     }
 
-    const parsedToAmount = Number(toAmount);
-    if (isNaN(parsedToAmount) || parsedToAmount <= 0) {
-      return;
+    const parsedFrom = Number(fromAmount);
+    const parsedTo = Number(toAmount);
+    if (Number.isNaN(parsedTo) || parsedTo <= 0) {
+      const converted = isRubToUsdt
+        ? parsedFrom / demoUsdtRubRate - networkFee
+        : (parsedFrom - networkFee) * demoUsdtRubRate;
+      if (converted > 0) {
+        const convertedFixed = converted.toFixed(2);
+        setToAmount(convertedFixed);
+        setToAmountFormatted(valueMask(Number(convertedFixed)));
+      }
     }
 
-    createOrder({
-      amount_give: parsed,
-      amount_get: parsedToAmount,
-      fee: networkFee,
-      user_id: userId,
-      payment_way_id,
-      wallet: usdtAddress,
-      rub_usdt_rate: rate
-    });
+    setIsStatusModalOpen(true);
   };
 
-  const rateLabel = rateData?.rub_usdt_rate
-    ? `${(rateData.rub_usdt_rate).toFixed(2)} RUB ≈ 1 USDT`
-    : "Курс недоступен";
+  const handleSwapDirection = () => {
+    const nextFromAmount = toAmount;
+    const nextToAmount = fromAmount;
+    const nextFromFormatted = toAmountFormatted;
+    const nextToFormatted = fromAmountFormatted;
+
+    setIsRubToUsdt((prev) => !prev);
+    setFromAmount(nextFromAmount);
+    setToAmount(nextToAmount);
+    setFromAmountFormatted(nextFromFormatted);
+    setToAmountFormatted(nextToFormatted);
+    setLastChangedField("from");
+    setFromAmountError(null);
+  };
+
+  const rateLabel = `${demoUsdtRubRate.toFixed(2)} RUB ≈ 1 USDT`;
 
   // Синхронизация отформатированных значений с внешними
   React.useEffect(() => {
@@ -347,20 +274,10 @@ export default function InstantExchangePage() {
       setLastChangedField("from");
 
       if (areErrorsVisible) {
-        // Check limit when typing
-        if (!isNaN(numeric) && extractedLimits?.amountLimit !== null && extractedLimits?.amountLimit !== undefined) {
-          const limitAmount = extractedLimits.amountLimit;
-          if (numeric > limitAmount) {
-            setFromAmountError(`Превышен лимит. Доступно: ${limitAmount.toLocaleString('ru-RU')} ₽`);
-          } else {
-            setFromAmountError(null);
-          }
-        } else {
-          setFromAmountError(null);
-        }
+        setFromAmountError(!isNaN(numeric) && numeric > 0 ? null : "Введите сумму обмена");
       }
     },
-    [areErrorsVisible, extractedLimits]
+    [areErrorsVisible]
   );
 
 
@@ -443,7 +360,7 @@ export default function InstantExchangePage() {
           ignoreParseDesc: true,
           info_list: [
             { title: 'Минимальная сумма', description: `${MIN_AMOUNT.toLocaleString('ru-RU')} ₽` },
-            { title: 'Комиссия сети', description: networkFee !== null ? `${valueMask(networkFee)} USDT` : 'Загрузка...' },
+            { title: 'Комиссия сети', description: `${valueMask(networkFee)} USDT` },
           ],
         }]} />
       <ExchangeStatusModal
@@ -453,15 +370,18 @@ export default function InstantExchangePage() {
         fromCurrency={fromCurrency}
         toAmount={toAmount}
         toCurrency={toCurrency}
-        paymentMethod={paymentMethod?.name}
-        usdtAddress={usdtAddress}
-        isRubToUsdt
-        paymentLink={orderResponse?.payment_url}
+        paymentMethod={paymentMethod?.name ?? FALLBACK_PAYMENT_OPTIONS[0].name}
+        receivingBank={paymentMethod?.name ?? FALLBACK_PAYMENT_OPTIONS[0].name}
+        usdtAddress={usdtAddress || "TDEMOu7N8gQw3TRC20walletX12"}
+        phoneNumber={phoneNumber || "+7 900 123-45-67"}
+        isRubToUsdt={isRubToUsdt}
+        isUsdtToRub={!isRubToUsdt}
+        paymentLink="https://google.com"
         finalAmount={Number(toAmount)}
       />
       <PageHeader>Мгновенный обмен</PageHeader>
       <p className="text-muted-foreground -mt-24 mb-16">
-        Мгновенная покупка USDT без посредников
+        {isRubToUsdt ? "Мгновенная покупка USDT без посредников" : "Мгновенная продажа USDT без посредников"}
       </p>
       <div className="grid gap-16 py-16">
         <div className="relative">
@@ -481,7 +401,7 @@ export default function InstantExchangePage() {
                   className="text-2xl font-bold border-none rounded-[12px] p-0 focus-visible:ring-0 placeholder:text-muted-foreground [&]:bg-white"
                 />
                 <span className="flex items-center gap-6 text-sm font-semibold text-foreground py-8 px-14 rounded-[12px]">
-                  <Image src="/images/icons/rub.svg" alt="RUB" width={20} height={20} />
+                  <Image src={fromCurrencyIcon} alt={fromCurrency} width={20} height={20} />
                   {fromCurrency}
                 </span>
               </div>
@@ -490,9 +410,20 @@ export default function InstantExchangePage() {
             <p className={clsx("h-13 text-xs -mt-4 text-red-500 px-16 opacity-0 transition-opacity duration-500", { "[&]:opacity-100": fromAmountError && areErrorsVisible })}>
               {fromAmountError}
             </p>
-
           </div>
 
+          <div className="flex justify-center relative z-10 -my-4">
+            <Button
+              type="button"
+              variant="secondary"
+              size="icon"
+              className="h-40 w-40 rounded-full border"
+              onClick={handleSwapDirection}
+              aria-label="Поменять направление обмена"
+            >
+              <ArrowUpDown className="h-18 w-18" />
+            </Button>
+          </div>
 
           <div className="bg-card p-16 rounded-xl border mt-8">
             <p className="text-xs text-muted-foreground mb-4">Вы получаете</p>
@@ -500,14 +431,14 @@ export default function InstantExchangePage() {
               <Input
                 trackingLabel="Сумма получения"
                 type="text"
-                placeholder={valueMask(Number((1000 / (rateData?.rub_usdt_rate || 1) - (rateData?.network_fee_usdt ?? 0)).toFixed(2)))}
+                placeholder={valueMask(Number((isRubToUsdt ? (1000 / demoUsdtRubRate - networkFee) : (100 - networkFee) * demoUsdtRubRate).toFixed(2)))}
                 value={toAmountFormatted}
                 onChange={handleToAmountChange}
                 onKeyDown={handleToAmountKeyDown}
                 className="text-2xl font-bold border-none rounded-[12px] p-0 focus-visible:ring-0 placeholder:text-muted-foreground [&]:bg-white"
               />
               <span className="flex items-center gap-6 text-sm font-semibold text-foreground py-8 px-14 rounded-[12px]">
-                <Image src="/images/icons/usdt.svg" alt="USDT" width={20} height={20} />
+                <Image src={toCurrencyIcon} alt={toCurrency} width={20} height={20} />
                 {toCurrency}
               </span>
             </div>
@@ -522,14 +453,14 @@ export default function InstantExchangePage() {
 
         <div className="grid gap-24 pt-16">
           <div className="grid gap-8">
-            <Label htmlFor="payment-method">Способ оплаты</Label>
+            <Label htmlFor="payment-method">{isRubToUsdt ? "Способ оплаты" : "Банк для получения"}</Label>
             <BaseSelect
-              options={rateData?.payment_ways || []}
+              options={paymentOptions}
               value={paymentMethod}
               onChange={handlePaymentMethodSelect}
               isOpen={isPaymentMethodOpen}
               onOpenChange={setIsPaymentMethodOpen}
-              disabled={!rateData?.payment_ways?.length}
+              disabled={false}
               searchValue={paymentMethodSearch}
               filterOptions={filterPaymentOptions}
               renderTrigger={({ isOpen }) => (
@@ -538,7 +469,7 @@ export default function InstantExchangePage() {
                 >
                   {!paymentMethodSearch && (
                     <div className="absolute left-16 pointer-events-none text-16 text-[var(--text-main)]">
-                      Выберите способ оплаты
+                      {isRubToUsdt ? "Выберите способ оплаты" : "Выберите банк"}
                     </div>
                   )}
                   <input
@@ -581,24 +512,37 @@ export default function InstantExchangePage() {
               )}
             />
           </div>
-          <div className="grid gap-8">
-            <Label htmlFor="usdt-address">Адрес USDT TRC20</Label>
-            <InputWrapper error={usdtAddressError && areErrorsVisible ? usdtAddressError : null}>
-              <Input
-                trackingLabel="Адрес кошелька"
-                className="border border-[var(--border-placeholder)] rounded-[21px] bg-[var(--background-secondary)] text-16 leading-normal px-18 py-13 pr-30 w-full"
-                type="text"
-                placeholder="Адрес кошелька в сети TRC20"
-                value={usdtAddress}
-                onChange={(e) => {
-                  setUsdtAddress(e.target.value);
-                  if (areErrorsVisible) {
-                    setUsdtAddressError(null);
-                  }
-                }}
-              />
-            </InputWrapper>
-          </div>
+          {isRubToUsdt ? (
+            <div className="grid gap-8">
+              <Label htmlFor="usdt-address">Адрес USDT TRC20</Label>
+              <InputWrapper error={null}>
+                <Input
+                  trackingLabel="Адрес кошелька"
+                  className="border border-[var(--border-placeholder)] rounded-[21px] bg-[var(--background-secondary)] text-16 leading-normal px-18 py-13 pr-30 w-full"
+                  type="text"
+                  placeholder="Адрес кошелька в сети TRC20"
+                  value={usdtAddress}
+                  onChange={(e) => {
+                    setUsdtAddress(e.target.value);
+                  }}
+                />
+              </InputWrapper>
+            </div>
+          ) : (
+            <div className="grid gap-8">
+              <Label htmlFor="phone-number">Номер телефона</Label>
+              <InputWrapper error={null}>
+                <Input
+                  trackingLabel="Номер телефона"
+                  className="border border-[var(--border-placeholder)] rounded-[21px] bg-[var(--background-secondary)] text-16 leading-normal px-18 py-13 pr-30 w-full"
+                  type="text"
+                  placeholder="+7 900 123-45-67"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </InputWrapper>
+            </div>
+          )}
         </div>
       </div>
 
@@ -609,33 +553,23 @@ export default function InstantExchangePage() {
             Комиссия сети
           </span>
           <div className="text-right">
-            {networkFee !== null ? (
-              <span className="text-sm font-semibold text-foreground">
-                {valueMask(networkFee)} USDT
-              </span>
-            ) : (
-              <span className="text-xs text-muted-foreground">
-                Загрузка...
-              </span>
-            )}
+            <span className="text-sm font-semibold text-foreground">
+              {valueMask(networkFee)} USDT
+            </span>
           </div>
         </div>
       </div>
 
       <div className="mb-16 bg-card border rounded-lg p-12 py-12 flex items-center justify-between gap-12">
         <div className="flex items-center gap-12">
-          {kycStatus === 'True' && <ShieldCheck className="h-20 w-20 text-accent" />}
-          {kycStatus === 'False' && <ShieldX className="h-20 w-20 text-red-500" />}
-          {kycStatus === 'InProcess' && <ShieldQuestion className="h-20 w-20 amber-500" />}
+          <ShieldCheck className="h-20 w-20 text-accent" />
           <div className="flex flex-col justify-center gap-5">
             <span className="text-sm font-medium text-foreground">
-              {kycStatus === 'True' && "Верификация пройдена"}
-              {kycStatus === 'False' && "Верификация не пройдена"}
-              {kycStatus === 'InProcess' && "Верификация в процессе"}
+              Демо-режим активен
             </span>
-            {kycStatus !== 'True' && <span className="text-xs font-normal text-muted-foreground">
-              Мгновенная покупка USDT недоступна
-            </span>}
+            <span className="text-xs font-normal text-muted-foreground">
+              Все сценарии обмена доступны для показа
+            </span>
           </div>
 
         </div>
@@ -648,42 +582,14 @@ export default function InstantExchangePage() {
         </Button>
       </div>
 
-      {kycStatus === 'False' && (
-        <div className="mb-16">
-          <Link href="/kyc">
-            <Button
-              variant="default"
-              className="w-full h-48 text-base font-bold flex items-center justify-center gap-2"
-            >
-              Пройти верификацию
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      )}
-
       <div>
         <Button
           onClick={handleExchange}
           className="w-full h-48 text-base font-bold"
-          disabled={
-            kycStatus !== 'True' || (!!fromAmountError && areErrorsVisible) ||
-            !fromAmount ||
-            !toAmount ||
-            !usdtAddress ||
-            !rateData?.rub_usdt_rate ||
-            (extractedLimits?.exchangeCountLeft !== null && extractedLimits?.exchangeCountLeft !== undefined && extractedLimits.exchangeCountLeft <= 0)
-          }
+          disabled={false}
         >
           Обменять
         </Button>
-        {extractedLimits?.exchangeCountLeft !== null &&
-          extractedLimits?.exchangeCountLeft !== undefined &&
-          extractedLimits.exchangeCountLeft <= 0 && (
-            <p className="text-sm text-red-500 mt-8 text-center">
-              Исчерпан лимит на количество обменов. Попробуйте позже.
-            </p>
-          )}
       </div>
     </div>
   );

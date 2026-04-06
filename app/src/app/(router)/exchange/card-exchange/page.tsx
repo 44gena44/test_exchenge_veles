@@ -18,12 +18,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useServerAction } from "@/shared/lib";
-import { getFastExchangeRateAction, getLimitsInfoAction } from "@/d__features/mockApi/api/actions";
-import { getDirectionInitialDataAction } from "@/d__features/exchange/api/actions/getDirectionInitialDataAction";
-import { useAppSelector } from "@/shared/model/store";
-import { setGetFastExchangeRateLoading, setGetLimitsInfoLoading } from "@/d__features/mockApi/model/store/mockApiLoadingReducer";
-import { setGetDirectionInitialDataLoading } from "@/d__features/exchange/model/store/reducer/exchangeApiLoadingReducer";
 
 const SbpLogo = ({ className }: { className?: string }) => (
     <svg
@@ -53,55 +47,40 @@ const formatMinAmount = (amount: number | null | undefined): string => {
     return `От ${amount.toLocaleString("ru-RU")}₽`;
 };
 
+const getDemoRate = () => Number((76 + Math.random() * 8).toFixed(2));
+const getDemoMinAmount = () => (Math.floor(10 + Math.random() * 16) * 1000);
+
 export default function ExchangeTypePage() {
     const [isLimitsModalOpen, setIsLimitsModalOpen] = React.useState(false);
+    const [demoRates, setDemoRates] = React.useState(() => ({
+        instantRate: getDemoRate(),
+        classicBuyRate: getDemoRate(),
+        classicSellRate: getDemoRate(),
+        classicMinAmount: getDemoMinAmount(),
+    }));
 
-    const [getFastRate, fastRateData] = useServerAction({
-        action: getFastExchangeRateAction,
-        loadingAction: setGetFastExchangeRateLoading,
-    });
-
-    const [getBankCoinData, bankCoinData] = useServerAction({
-        action: getDirectionInitialDataAction,
-        loadingAction: setGetDirectionInitialDataLoading,
-    });
-
-    const [getCoinBankData, coinBankData] = useServerAction({
-        action: getDirectionInitialDataAction,
-        loadingAction: setGetDirectionInitialDataLoading,
-    });
-
-    const [getLimits, limitsData] = useServerAction({
-        action: getLimitsInfoAction,
-        loadingAction: setGetLimitsInfoLoading,
-    });
-
-    const userId = useAppSelector(state => state.user.id);
+    const limitsData = null;
 
     React.useEffect(() => {
-        if (userId) {
-            getLimits({ user_id: userId });
-        }
-    }, [userId]);
+        const updateRates = () => {
+            setDemoRates({
+                instantRate: getDemoRate(),
+                classicBuyRate: getDemoRate(),
+                classicSellRate: getDemoRate(),
+                classicMinAmount: getDemoMinAmount(),
+            });
+        };
 
-    React.useEffect(() => {
-        getFastRate(undefined);
-        getBankCoinData("BANK - COIN");
-        getCoinBankData("COIN - BANK");
-
-        const intervalId = setInterval(() => {
-            getFastRate(undefined);
-            getBankCoinData("BANK - COIN");
-            getCoinBankData("COIN - BANK");
-        }, 30000);
+        updateRates();
+        const intervalId = setInterval(updateRates, 12000);
 
         return () => clearInterval(intervalId);
     }, []);
 
-    const instantRate = fastRateData?.rub_usdt_rate ?? null;
-    const classicBuyRate = bankCoinData?.rate?.course ?? null;
-    const classicSellRate = coinBankData?.rate?.course ?? null;
-    const classicMinAmount = bankCoinData?.rate?.currency_give_min_value ?? null;
+    const instantRate = demoRates.instantRate;
+    const classicBuyRate = demoRates.classicBuyRate;
+    const classicSellRate = demoRates.classicSellRate;
+    const classicMinAmount = demoRates.classicMinAmount;
 
     const exchangeTypes = [
         {

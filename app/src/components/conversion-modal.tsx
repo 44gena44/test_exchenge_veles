@@ -32,6 +32,9 @@ export function ConversionModal({
   const [toCurrency, setToCurrency] = React.useState('RUB');
   const [fromAmount, setFromAmount] = React.useState('');
   const [toAmount, setToAmount] = React.useState('');
+  const [demoRate, setDemoRate] = React.useState(() =>
+    Number((76 + Math.random() * 8).toFixed(2))
+  );
 
   const handleSwap = () => {
     setFromCurrency(toCurrency);
@@ -41,12 +44,24 @@ export function ConversionModal({
   // Dummy conversion rate
   React.useEffect(() => {
     if (fromAmount) {
-      const rate = 98.5; // Example rate
-      setToAmount((parseFloat(fromAmount) * rate).toFixed(2));
+      const parsed = parseFloat(fromAmount);
+      if (Number.isNaN(parsed)) {
+        setToAmount('');
+        return;
+      }
+      const converted = fromCurrency === 'USDT'
+        ? parsed * demoRate
+        : parsed / demoRate;
+      setToAmount(converted.toFixed(2));
     } else {
       setToAmount('');
     }
-  }, [fromAmount, fromCurrency, toCurrency]);
+  }, [fromAmount, fromCurrency, toCurrency, demoRate]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    setDemoRate(Number((76 + Math.random() * 8).toFixed(2)));
+  }, [isOpen, fromCurrency, toCurrency]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -110,7 +125,7 @@ export function ConversionModal({
                </div>
           </div>
           <div className="text-xs text-muted-foreground text-center">
-            Курс: 1 USDT ≈ 98.50 RUB
+            Курс: 1 USDT ≈ {demoRate.toFixed(2)} RUB
           </div>
         </div>
         <DialogFooter>

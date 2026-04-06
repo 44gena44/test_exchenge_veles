@@ -22,6 +22,7 @@ import { BackHeader } from "@/components/back-header";
 import BottomNav from "@/components/layout/bottom-nav";
 import { usePathname } from "next/navigation";
 import { KycStatusPuller } from "@/d__features/userDataDisplay/lib/KycStatusPuller";
+import clsx from "clsx";
 
 const inter = localFont({
   src: "../../public/fonts/Inter-Variable.woff2",
@@ -51,8 +52,14 @@ export default function RootLayout({
   const mainClassName = isLandingRoute
     ? "grow h-full bg-[#f5f5f7]"
     : isNewDesignRoute
-    ? "flex-grow mx-auto w-full max-w-lg px-16 pt-24 pb-150 bg-background"
+    ? "flex-grow w-full px-16 pt-24 pb-150 bg-background"
     : "pb-150 grow h-full";
+
+  const appShellClassName = clsx(
+    "w-full",
+    !isLandingRoute &&
+      "relative mx-auto min-h-screen w-full max-w-[430px] bg-background md:my-16 md:min-h-[calc(100vh-2rem)] md:rounded-[34px] md:border md:border-border/70 md:shadow-[0_30px_90px_rgba(27,28,35,0.25)] md:overflow-hidden"
+  );
 
   return (
     <html lang="ru">
@@ -61,14 +68,16 @@ export default function RootLayout({
         <StoreProvider>
           <ThemeInitialiser />
           <TelegramAppInitializer />
-          {!isLandingRoute && <PageOpenTracking />}
-          {!isNewDesignRoute && !isLandingRoute && <Header />}
-          <LoadingProvider/>
+          <div className={appShellClassName}>
+            {!isLandingRoute && <PageOpenTracking />}
+            {!isNewDesignRoute && !isLandingRoute && <Header />}
+            <LoadingProvider />
             <main className={mainClassName}>
               {isNewDesignRoute && pathname !== "/obmennik" && <BackHeader />}
               {children}
             </main>
-         {!isLandingRoute && <BottomNav />}
+            {!isLandingRoute && <BottomNav />}
+          </div>
 
           {!isLandingRoute && (
             <>
