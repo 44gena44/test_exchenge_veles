@@ -12,13 +12,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract and show repository name
         id: extract_repo_name
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo "::set-output name=repo_name::$REPO_NAME"
+          echo "repo_name=$REPO_NAME" >> "$GITHUB_OUTPUT"
 
       # Копируем директорию на сервер через rsync, исключая .env и app/data/token.txt
       - name: Rsync directory excluding specific files
@@ -28,9 +28,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}  # root или другой пользователь
           key: ${{ secrets.SERVER_SSH_KEY }}    # ← ключ вместо password
           port: 22
-          source: "."
+          source: "app,docker-compose.yml,.github"
           target: "/home/apps/${{ steps.extract_repo_name.outputs.repo_name }}"
-          switches_extra: --exclude=.env --exclude=app/data/token.txt --exclude=.git/
 
       # Выполняем Docker Compose на сервере
       - name: Start Docker Compose on Server
